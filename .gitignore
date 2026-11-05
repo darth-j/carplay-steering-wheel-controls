@@ -1,0 +1,12 @@
+# Explicit publication allow-list: review before expanding.
+*
+!.gitignore
+!README.md
+!INTEGRATION.md
+!PRIVACY.md
+!SECURITY.md
+!LICENSE
+!PlaybackPolicy.java
+!SteeringWheelControls.java
+!ControlsTest.java
+!test.sh
