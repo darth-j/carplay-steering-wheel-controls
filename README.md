@@ -63,6 +63,10 @@ Suppress native handling only when `consumed` is true. Feed original power, stan
 
 See [INTEGRATION.md](INTEGRATION.md) for the adapter contract. The variables above come from the host; they do not refer to a built-in device connection or global service.
 
+## Deployment
+
+Build the library with `sh build.sh`, then integrate it into a target-specific adapter. The generated JAR is not a firmware payload on its own. See [DEPLOYMENT.md](DEPLOYMENT.md) for runtime compatibility, staging, read-back verification, temporary loading, hardware validation, permanent enablement and rollback.
+
 ## Scope, privacy and license
 
 This is an independent reference implementation of the mapping behavior, not a verbatim publication of manufacturer override classes. Synthetic tests validate the portable logic, not a particular service ABI, firmware, phone application or physical key mapping. Rejection timing, call enums and multi-call behavior require target-specific validation.
@@ -129,6 +133,10 @@ sh test.sh
 测试脚本输出桌面 Java 8 字节码，**不能直接装进旧嵌入式 JVM**；集成时必须针对真实运行时重新编译和验证。详细契约见 [INTEGRATION.md](INTEGRATION.md)，只有 `consumed == true` 时才阻止原厂继续处理。
 
 这是独立整理的参考实现，不是原厂覆盖类的逐字开源副本，不宣称支持全部车机或全部固件。拒接时序、来电枚举、多通话和具体应用兼容性仍需目标适配器实测。
+
+### 部署与回退
+
+运行 `sh build.sh` 可构建逻辑库 JAR，但它本身不是车机刷机包，仍需目标设备适配器。完整的运行时兼容、暂存、回读校验、临时加载、实机测试、永久生效和回退流程见 [DEPLOYMENT.md](DEPLOYMENT.md)。
 
 ### 隐私与许可证
 

@@ -65,7 +65,7 @@ The port must report errors honestly. Do not silently fall back to an unverified
 - Calls into a firmware service may enqueue work, but must not synchronously wait for a second thread that needs to re-enter the controls object.
 - When disabling input or disconnecting, the engine clears captures and releases an outstanding phone key. Old scheduled tasks are generation-checked.
 - An input adapter should apply its original power/standby/lockout restrictions via `setInputAllowed`. This library cannot infer them.
-- Deployment, compatibility checks, backups and recovery are outside the scope of this repository.
+- See [DEPLOYMENT.md](DEPLOYMENT.md) for the build and deployment workflow. Actual installation, compatibility checks, backups and recovery remain the target adapter's responsibility.
 
 ## Hardware validation
 

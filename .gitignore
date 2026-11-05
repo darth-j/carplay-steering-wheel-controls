@@ -10,3 +10,5 @@
 !SteeringWheelControls.java
 !ControlsTest.java
 !test.sh
+!DEPLOYMENT.md
+!build.sh
