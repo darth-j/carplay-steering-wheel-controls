@@ -7,7 +7,7 @@ The core operates on logical buttons and primitive state values. It does not shi
 - Buttons: `STAR`, `ROLLER`, `VOICE`, `NAVIGATION_VOICE`.
 - Events: `PRESS`, `RELEASE`, `LONG_PRESS`, `DOUBLE_PRESS`.
 - `steeringWheelSource` must come from a verified input-source mapping. Do not infer it from the button number alone; another control surface may reuse that number.
-- Map hardware IDs locally. No device-specific IDs, connected-screen model IDs, diagnostic addresses or firmware versions are included here.
+- Map hardware IDs locally. No physical key IDs, connected-screen model IDs or diagnostic addresses are included here. Generic model and software-version reference information is documented separately in [COMPATIBILITY.md](COMPATIBILITY.md).
 - Preserve native behavior when `onKey` returns false. Do not call both custom and native paths for consumed events.
 - Update connection and page state independently. Call `updateConnection(false, false)` at a real disconnect. Do not substitute “application started” for “phone connected”.
 - Feed only a normalized connected/page boolean to the library. Any interpretation of vendor state models belongs in the adapter.

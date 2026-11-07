@@ -7,11 +7,12 @@ Included:
 - Original logical state machines and adapter contracts.
 - Synthetic, in-memory tests with a virtual clock.
 - A dependency-free local test command and an MIT license.
+- Explicitly requested generic model/platform/software-version compatibility information, without unique device identifiers.
 
 Excluded:
 
 - Device backups, firmware images, original libraries, decompiled manufacturer classes and proprietary SDK files.
-- Vehicle identifiers, hardware serials, registration information, mileage and production configuration fingerprints.
+- Vehicle identifiers, hardware serials, registration information, mileage and unit-specific configuration fingerprints.
 - Credentials, keys, account identifiers, private email addresses, local usernames and absolute filesystem paths.
 - Network addresses, hardware addresses, wireless network credentials and connection profiles.
 - Phone numbers, caller names, contact lists, call identifiers, location information and navigation history.

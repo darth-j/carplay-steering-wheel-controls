@@ -12,6 +12,12 @@ A small, dependency-free Java reference implementation of context-aware steering
 
 This is a portable logic library, **not a ready-to-flash firmware package**. It does not connect to, restart or modify any device. Hardware events, proprietary services, installation and recovery belong in a separately reviewed adapter.
 
+## Compatibility / reference platform
+
+The separate reference adapter was evaluated on **Audi A6 allroad C7.5 (model year 2017), MIB2 High / Harman MHI2, firmware `MHI2_CN_AU57x_K1006_2`, MU `1005`**. This is a reference baseline, not a ready-to-install package or a guarantee for every vehicle with the same model name.
+
+See [COMPATIBILITY.md](COMPATIBILITY.md) for the vehicle, head-unit, firmware/runtime requirements, test limits and unverified configurations. A target-specific adapter is still required; other firmware trains, regions and platforms are not automatically supported.
+
 ## Features
 
 | Context | Star | Volume roller press | Voice | Navigation voice |
@@ -94,6 +100,12 @@ CarPlay is a trademark of its respective owner. This project is not affiliated w
 **刷写或修改固件可能导致车机损坏、无法启动、界面中断，或影响车辆功能，测试需谨慎。** 请备份原始文件、保留可靠的恢复方式、保持供电稳定，并仅在车辆停稳时进行设备测试，不要仅凭本仓库示例直接刷机。
 
 **本仓库不是可直接刷入车机的安装包。** 它不会连接、重启或修改设备。硬件事件、原厂服务调用、安装和恢复需要由另行审查的适配器实现。
+
+### 适用车型、车机与固件
+
+独立参考适配器的集成基线是：**2017 年款奥迪 A6 allroad C7.5，MIB2 High / Harman MHI2，固件 `MHI2_CN_AU57x_K1006_2`，MU `1005`**。它是参考范围，不代表同车型全部车辆均兼容，也不是可直接安装的刷机包。
+
+完整车型、平台、固件／运行时要求、测试限制和未验证范围见 [COMPATIBILITY.md](COMPATIBILITY.md)。仍需目标适配器，不能直接套用其他固件、区域或车机平台。
 
 ### 按键功能
 
