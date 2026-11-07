@@ -1,3 +1,15 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * Copyright (C) 2026 Skywalker (darth-j)
+ *
+ * This file is part of CarPlay Steering-Wheel Controls.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ * This program is distributed WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See LICENSE and NOTICE.md for licensing and source attribution.
+ */
 package carplay.controls;
 
 import java.util.ArrayList;

@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: GPL-3.0-only; Copyright (C) 2026 Skywalker (darth-j) -->
+
 # Security and responsible reporting
 
 Do not attach firmware dumps, credentials, private configuration, packet captures or identifiable device logs to public issues.

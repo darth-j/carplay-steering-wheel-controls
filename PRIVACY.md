@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: GPL-3.0-only; Copyright (C) 2026 Skywalker (darth-j) -->
+
 # Privacy and publication boundary
 
 This project is a separately authored, portable logic library. It is deliberately published from an isolated directory rather than from the private development workspace or its history.
@@ -6,8 +8,9 @@ Included:
 
 - Original logical state machines and adapter contracts.
 - Synthetic, in-memory tests with a virtual clock.
-- A dependency-free local test command and an MIT license.
+- A dependency-free local test command and a GPLv3 license.
 - Explicitly requested generic model/platform/software-version compatibility information, without unique device identifiers.
+- The public GitHub identity used for copyright/source attribution; no private email address is published.
 
 Excluded:
 

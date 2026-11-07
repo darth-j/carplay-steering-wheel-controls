@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: GPL-3.0-only; Copyright (C) 2026 Skywalker (darth-j) -->
+
 # CarPlay Steering-Wheel Controls
 
 A small, dependency-free Java reference implementation of context-aware steering-wheel controls for CarPlay integrations.
@@ -73,7 +75,7 @@ See [INTEGRATION.md](INTEGRATION.md) for the adapter contract. The variables abo
 
 Build the library with `sh build.sh`, then integrate it into a target-specific adapter. The generated JAR is not a firmware payload on its own. See [DEPLOYMENT.md](DEPLOYMENT.md) for runtime compatibility, staging, read-back verification, temporary loading, hardware validation, permanent enablement and rollback.
 
-## Scope, privacy and license
+## Scope and privacy
 
 This is an independent reference implementation of the mapping behavior, not a verbatim publication of manufacturer override classes. Synthetic tests validate the portable logic, not a particular service ABI, firmware, phone application or physical key mapping. Rejection timing, call enums and multi-call behavior require target-specific validation.
 
@@ -81,7 +83,15 @@ The repository collects no telemetry and contains no device backups, proprietary
 
 - [PRIVACY.md](PRIVACY.md): publication boundaries.
 - [SECURITY.md](SECURITY.md): minimal, privacy-safe defect reporting.
-- [LICENSE](LICENSE): MIT license for this repository's implementation and documentation.
+- [LICENSE](LICENSE): GNU GPL version 3 for the current project revision.
+
+## License and attribution
+
+The current project revision is licensed under **GNU GPL version 3 only (`GPL-3.0-only`)**. Copyright (C) 2026 **Skywalker (darth-j)**. Project/source: [CarPlay Steering-Wheel Controls](https://github.com/darth-j/carplay-steering-wheel-controls). See [LICENSE](LICENSE) and [NOTICE.md](NOTICE.md). The build also includes both files in the JAR's `META-INF` directory.
+
+When conveying copies or covered modified versions, preserve the applicable copyright, license and warranty notices and comply with the GPLv3 source and licensing obligations. Mark modifications as required by the license. This is not a requirement to put the author's name on a product's user interface, and commercial use is not prohibited.
+
+Earlier snapshots released under MIT retain their existing MIT grants. This change does not retroactively revoke permissions already received for those snapshots. The license does not create copyright or other exclusive rights where applicable law does not recognize them; the AI-generated-code disclosure remains applicable.
 
 CarPlay is a trademark of its respective owner. This project is not affiliated with a device manufacturer or platform provider.
 
@@ -89,7 +99,7 @@ CarPlay is a trademark of its respective owner. This project is not affiliated w
 
 ## 中文说明
 
-这是用于 CarPlay 接入的方向盘按键映射独立参考库，只包含状态机、合成测试和接入文档，无第三方运行依赖，采用 MIT 许可证。
+这是用于 CarPlay 接入的方向盘按键映射独立参考库，只包含状态机、合成测试和接入文档，无第三方运行依赖，采用 GNU GPL 第 3 版（`GPL-3.0-only`）。
 
 ### AI 生成声明
 
@@ -154,4 +164,12 @@ sh test.sh
 
 本仓库不采集、不存储、不上传遥测数据，不包含车机备份、原厂固件、反编译类、真实日志、截图、访问凭据、硬件标识、本地路径或私人邮箱。电话分支只需要状态与方向，不需要号码、联系人或通话标识。
 
-发布边界、缺陷报告方式和 MIT 许可分别见 [PRIVACY.md](PRIVACY.md)、[SECURITY.md](SECURITY.md)、[LICENSE](LICENSE)。CarPlay 为其权利人的商标，本项目不隶属于设备制造商或平台提供方。
+发布边界、缺陷报告方式和 GPLv3 许可分别见 [PRIVACY.md](PRIVACY.md)、[SECURITY.md](SECURITY.md)、[LICENSE](LICENSE)。CarPlay 为其权利人的商标，本项目不隶属于设备制造商或平台提供方。
+
+### GPLv3 与来源标注
+
+当前项目版本采用 **GNU GPL 第 3 版，仅第 3 版（`GPL-3.0-only`）**。版权声明：Copyright (C) 2026 **Skywalker (darth-j)**。项目与源码地址：[CarPlay Steering-Wheel Controls](https://github.com/darth-j/carplay-steering-wheel-controls)，详见 [LICENSE](LICENSE) 和 [NOTICE.md](NOTICE.md)。构建时也会将这两份文件放入 JAR 的 `META-INF` 目录。
+
+分发副本或受 GPL 覆盖的修改版本时，应保留相应版权、许可和无担保声明，按 GPLv3 履行源码提供、许可及修改标记义务。GPLv3 不禁止商用，也不等于要求产品界面必须显示作者姓名。
+
+此前按 MIT 发布的历史版本仍保留原有 MIT 授权，这次变更不会追溯撤销他人已经获得的权限。许可证不会创造适用法律本不承认的著作权或其他专有权利，代码由 AI 生成的声明保持不变。

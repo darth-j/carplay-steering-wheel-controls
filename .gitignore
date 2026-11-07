@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: GPL-3.0-only
+# Copyright (C) 2026 Skywalker (darth-j)
 # Explicit publication allow-list: review before expanding.
 *
 !.gitignore
@@ -13,3 +15,4 @@
 !DEPLOYMENT.md
 !build.sh
 !COMPATIBILITY.md
+!NOTICE.md

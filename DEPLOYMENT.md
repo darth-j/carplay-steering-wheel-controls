@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: GPL-3.0-only; Copyright (C) 2026 Skywalker (darth-j) -->
+
 # Build, integration and deployment
 
 ## English
@@ -30,7 +32,7 @@ Output:
 dist/carplay-steering-wheel-controls.jar
 ```
 
-The artifact contains the two production classes and their nested types. It excludes the test class, private fixtures, firmware and credentials. `dist/` is excluded from Git by the publication allow-list.
+The artifact contains the two production classes and their nested types, plus GPLv3 and attribution files under `META-INF`. It excludes the test class, private fixtures, firmware and credentials. `dist/` is excluded from Git by the publication allow-list.
 
 This default artifact targets Java 8 bytecode, class-file major version 52. **It is not suitable for an older embedded JVM that rejects that version.** The Java runtime on the target determines the required compiler, source/target flags, boot dependencies and verification procedure. Those compiler dependencies must be obtained locally; do not add proprietary SDK or firmware files to this repository.
 
@@ -126,7 +128,7 @@ sh test.sh
 sh build.sh
 ```
 
-生成 `dist/carplay-steering-wheel-controls.jar`。其中仅包含生产逻辑及嵌套类型，不包含测试类、固件或私人数据，`dist/` 不提交到 Git。
+生成 `dist/carplay-steering-wheel-controls.jar`。其中包含生产逻辑、嵌套类型及 `META-INF` 中的 GPLv3 许可和来源说明，不包含测试类、固件或私人数据，`dist/` 不提交到 Git。
 
 **默认产物是 Java 8 字节码（major 52），不能直接放进不支持该版本的旧嵌入式 JVM。** 需要依据目标运行时选用兼容的编译器、目标版本和本地依赖，并在原运行时验证。不要把厂商 SDK 或固件依赖上传到公共仓库。
 

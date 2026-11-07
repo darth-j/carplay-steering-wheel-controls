@@ -1,4 +1,7 @@
 #!/bin/sh
+# SPDX-License-Identifier: GPL-3.0-only
+# Copyright (C) 2026 Skywalker (darth-j)
+# Part of CarPlay Steering-Wheel Controls; see LICENSE and NOTICE.md.
 set -eu
 cd "$(dirname "$0")"
 OUT=$(mktemp -d)

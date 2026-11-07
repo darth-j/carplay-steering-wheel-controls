@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: GPL-3.0-only; Copyright (C) 2026 Skywalker (darth-j) -->
+
 # Adapter contract
 
 The core operates on logical buttons and primitive state values. It does not ship a vendor adapter, SDK, firmware class, installer or network client.
