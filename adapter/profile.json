@@ -1,0 +1,49 @@
+{
+  "id": "au57x-cn-reference",
+  "train": "MHI2_CN_AU57x_K1006_2",
+  "mu": "MU1005",
+  "cfr_sha256": "f686e8f3ded377d7bc87d216a90e9e9512df4156e75b06c655a16648ae8765b2",
+  "ecj_sha256": "9cddda75f4a1b4469e73f44e7b61a3e897d0f657df4797f9106ffe88c4eeade0",
+  "patched_sources": [
+    {
+      "path": "de/audi/tghu/fwkbd/KbdListener.java",
+      "original_class_sha256": "17c43939580917a04f31b049b503a363c7f8aac0e31c0289486be0f3d62a7356",
+      "canonical_source_sha256": "4dc5fd3ee0b14d65fcda84f3ab447e8c7efaa82cf97f6281af6002aa6d5e4762",
+      "patched_source_sha256": "10a6bf566522f843c912e110abc3e6fb2956379c9f3ed67cf9b3037c1a5c49c9",
+      "patch": "KbdListener.patch"
+    },
+    {
+      "path": "de/audi/app/terminalmode/dsi/carplay/CarplayDSILifecycleController$DSICarplayListenerImpl.java",
+      "original_class_sha256": "c42a85fe332dcef5011d8e494f2b1264430281384da26f37ca7596a895d2ba55",
+      "canonical_source_sha256": "5e96c803a6620c9d95ec7ddd06f44eee182f6a4929861b174f7ac43a71418b04",
+      "patched_source_sha256": "7da77d773e4a7f7a224e1d1380e25b10cea98b1c1c7552669f77760b9b4dc36d",
+      "patch": "CarplayDSILifecycleController$DSICarplayListenerImpl.patch"
+    },
+    {
+      "path": "de/audi/app/terminalmode/dsi/carplay/DSICarplaySafeProxy.java",
+      "original_class_sha256": "8e623244eb37a74fb81d5a6ba56d5535ed5c69a9b793fb706c34ba10607e1fad",
+      "canonical_source_sha256": "0159bd18a9d29b3655e3a962472740583fb585f6e7291c6dde3d2f46edf7a0b6",
+      "patched_source_sha256": "331c4d6f49ee8114472e3b88b9a976c669b93af31e6a4c0ea42c277d367b2b1f",
+      "patch": "DSICarplaySafeProxy.patch"
+    }
+  ],
+  "helpers": [
+    {
+      "path": "de/audi/tghu/fwkbd/CarPlayAudioFocus.java",
+      "target_source_sha256": "fcb6b042f443aa00bd201ff19a3994cb6228a331af49ca21600d73190a5e9950"
+    },
+    {
+      "path": "de/audi/tghu/fwkbd/ConnectionPlaybackPolicy.java",
+      "target_source_sha256": "24473549c79e087ace4927f7d210dec91e5309d713ed3b79501db8947bce5944"
+    }
+  ],
+  "expected_class_sha256": {
+    "de/audi/app/terminalmode/dsi/carplay/CarplayDSILifecycleController$DSICarplayListenerImpl.class": "1b21ad5965700808f7f8372367a76b1b97d47959dbc15d741760e9c1c03f7db5",
+    "de/audi/app/terminalmode/dsi/carplay/DSICarplaySafeProxy.class": "782dcf1dccd417749d983d017c05ed4c697587100c28f11a768ed54d5d79330d",
+    "de/audi/tghu/fwkbd/CarPlayAudioFocus$1.class": "9a43364e9170452305114d86de78913a82a02cde2fc858f7615844f76241dc19",
+    "de/audi/tghu/fwkbd/CarPlayAudioFocus.class": "0983f7909ed57195cfc2b889c56f9012602720d5152b109d6a55a769e9833344",
+    "de/audi/tghu/fwkbd/ConnectionPlaybackPolicy$ButtonGate.class": "f3094f1315631e4213471c753413a4f617de61bebaa03bb9e26eb00e8726ada7",
+    "de/audi/tghu/fwkbd/ConnectionPlaybackPolicy.class": "e210bc4fba576eeb03c034dabfe47c5e20f8c311750d73221eb3072c20cd6e4b",
+    "de/audi/tghu/fwkbd/KbdListener.class": "a78468af2964081c1af7ce113df3edcc6d77f968c563219d81a043527235883d"
+  }
+}

@@ -6,7 +6,9 @@ This project is a separately authored, portable logic library. It is deliberatel
 
 Included:
 
-- Original logical state machines and adapter contracts.
+- Original logical state machines, adapter helpers, build/installer code and contracts.
+- Small OEM context/removal fragments in source patches, with original ownership retained; no complete stock class or dependency JAR.
+- Generic class/software fingerprints for reproducibility, not unit-specific startup data.
 - Synthetic, in-memory tests with a virtual clock.
 - A dependency-free local test command and a GPLv3 license.
 - Explicitly requested generic model/platform/software-version compatibility information, without unique device identifiers.
@@ -14,7 +16,7 @@ Included:
 
 Excluded:
 
-- Device backups, firmware images, original libraries, decompiled manufacturer classes and proprietary SDK files.
+- Device backups, firmware images, original libraries, complete decompiled manufacturer classes and proprietary SDK files.
 - Vehicle identifiers, hardware serials, registration information, mileage and unit-specific configuration fingerprints.
 - Credentials, keys, account identifiers, private email addresses, local usernames and absolute filesystem paths.
 - Network addresses, hardware addresses, wireless network credentials and connection profiles.

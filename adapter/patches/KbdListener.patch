@@ -1,0 +1,444 @@
+--- a/de/audi/tghu/fwkbd/KbdListener.java
++++ b/de/audi/tghu/fwkbd/KbdListener.java
+@@ -5,6 +5,7 @@
+ 
+ import de.audi.atip.base.FwServices;
+ import de.audi.atip.base.IFrameworkAccess;
++import de.audi.atip.diag.sw.SwDiagnosisManager;
+ import de.audi.atip.hmi.IRootWindow;
+ import de.audi.atip.hmi.event.ATIPEvent;
+ import de.audi.atip.hmi.event.ATIPEventListener;
+@@ -21,13 +22,16 @@
+ import de.audi.tghu.fwkbd.ComboKeyDetector;
+ import de.audi.tghu.fwkbd.KeyMap;
+ import org.dsi.ifc.keypanel.DSIKeyPanelListener;
++import org.dsi.ifc.carplay.CallState;
++import org.osgi.framework.BundleContext;
++import org.osgi.framework.ServiceReference;
+ 
+ public final class KbdListener
+ implements DSIKeyPanelListener,
+ RSESettingsEventListener,
+ PowerEventListener {
+     private static final int[][] table = KeyMap.tableDSI;
+-    private static final int REMOTE_CONTROL_FFB;
++    private static final int REMOTE_CONTROL_FFB = 0;
+     private static SDSService sdsService;
+     private final FwServices fwServices;
+     private final IFrameworkAccess fw;
+@@ -41,6 +45,17 @@
+     private boolean restrictFunctionUsage;
+     private boolean childProtectionActivated;
+     private boolean standbyFilerActive = false;
++    private static volatile int carPlayCallPhase = 0;
++    private boolean mfwJokerCaptured = false;
++    private boolean mfwVolumeCaptured = false;
++    private boolean mfwPttCaptured = false;
++    private boolean mfwInfoCaptured = false;
++    private boolean mfwPhoneEndCaptured = false;
++    private boolean mfwRejectCaptured = false;
++    private boolean mfwJokerLong = false;
++    private boolean mfwVolumeLong = false;
++    private boolean mfwPttLong = false;
++    private boolean mfwInfoLong = false;
+     boolean isRSE;
+     private int[] powerState = new int[7];
+ 
+@@ -200,7 +215,6 @@
+         this.postEvent(new JoystickEvent(this.getRootWindow(n2), 10404, this.fw.getMonotonicTime(), 22, n3, n2));
+     }
+ 
+-    @Override
+     public void asyncException(int n, String string, int n2) {
+         this.lc.log(10000, 306, (long)n, (long)n2);
+     }
+@@ -210,6 +224,7 @@
+             return;
+         }
+         this.lc.log(1078071040, 450, (long)n, (long)n2, (long)n3);
++        System.out.println("MFW KEY keyboard=" + n + " key=" + n2 + " action=" + n3);
+         if (this.standbyFilerActive) {
+             if (n2 == 17) {
+                 this.lc.log(1078071040, 451, (long)n, (long)n3);
+@@ -266,6 +281,35 @@
+                     this.lc.log(-2137614336, 670);
+                     break;
+                 }
++                if (n == 4 || n == 8) {
++                    if (n2 == 50) {
++                        this.mfwPttCaptured = true;
++                        this.mfwPttLong = false;
++                        break;
++                    }
++                    if (this.isCarPlayActive() && (carPlayCallPhase != 0 || this.isCarPlayScreen())) {
++                        if (n2 == 58) {
++                            this.mfwJokerCaptured = true;
++                            this.mfwJokerLong = false;
++                            break;
++                        }
++                        if (n2 == 57) {
++                            this.mfwVolumeCaptured = true;
++                            this.mfwVolumeLong = false;
++                            break;
++                        }
++                        if (n2 == 52) {
++                            this.mfwInfoCaptured = true;
++                            this.mfwInfoLong = false;
++                            if (carPlayCallPhase != 0) {
++                                this.mfwPhoneEndCaptured = true;
++                                this.mfwRejectCaptured = carPlayCallPhase == 1;
++                                CarPlayAudioFocus.phoneHangup(false);
++                            }
++                            break;
++                        }
++                    }
++                }
+                 if (!bl2 && this.comboKeyDetector.keyPressedConsumed(n, n2, n5)) break;
+                 this.fireKeyPressedEvent(n2, n5, n);
+                 break;
+@@ -279,6 +323,37 @@
+                     this.fireJoystickEvent(n2, n5);
+                     break;
+                 }
++                if (n == 4 || n == 8) {
++                    if (n2 == 58 && this.mfwJokerCaptured) {
++                        if (!this.mfwJokerLong) this.handleCustomKey(58);
++                        this.mfwJokerCaptured = false;
++                        this.mfwJokerLong = false;
++                        break;
++                    }
++                    if (n2 == 57 && this.mfwVolumeCaptured) {
++                        if (!this.mfwVolumeLong) this.handleCustomKey(57);
++                        this.mfwVolumeCaptured = false;
++                        this.mfwVolumeLong = false;
++                        break;
++                    }
++                    if (n2 == 50 && this.mfwPttCaptured) {
++                        if (!this.mfwPttLong) this.handleCustomKey(50);
++                        this.mfwPttCaptured = false;
++                        this.mfwPttLong = false;
++                        break;
++                    }
++                    if (n2 == 52 && this.mfwInfoCaptured) {
++                        if (this.mfwPhoneEndCaptured) {
++                            if (this.mfwRejectCaptured) CarPlayAudioFocus.releasePhoneHangupAfter(1500L);
++                            else CarPlayAudioFocus.phoneHangup(true);
++                            this.mfwPhoneEndCaptured = false;
++                            this.mfwRejectCaptured = false;
++                        } else if (!this.mfwInfoLong) this.handleCustomKey(52);
++                        this.mfwInfoCaptured = false;
++                        this.mfwInfoLong = false;
++                        break;
++                    }
++                }
+                 if (this.comboKeyDetector.keyReleasedConsumed(n2, n5)) break;
+                 this.fireKeyReleasedEvent(n2, n5, n);
+                 break;
+@@ -288,6 +363,12 @@
+                     this.lc.log(-2137614336, 672);
+                     return;
+                 }
++                if (n == 4 || n == 8) {
++                    if (n2 == 58 && this.mfwJokerCaptured) { this.mfwJokerLong = true; break; }
++                    if (n2 == 57 && this.mfwVolumeCaptured) { this.mfwVolumeLong = true; break; }
++                    if (n2 == 50 && this.mfwPttCaptured) { this.mfwPttLong = true; break; }
++                    if (n2 == 52 && this.mfwInfoCaptured) { this.mfwInfoLong = true; break; }
++                }
+                 this.fireKeyLongPressedEvent(n2, n5);
+                 break;
+             }
+@@ -296,6 +377,10 @@
+                     this.lc.log(-2137614336, 673);
+                     return;
+                 }
++                if ((n == 4 || n == 8) && ((n2 == 58 && this.mfwJokerCaptured)
++                        || (n2 == 57 && this.mfwVolumeCaptured)
++                        || (n2 == 50 && this.mfwPttCaptured)
++                        || (n2 == 52 && this.mfwInfoCaptured))) break;
+                 if (n2 == 50) {
+                     this.fireKeyDoublePressedEvent(n2, n5);
+                     break;
+@@ -327,6 +412,119 @@
+             }
+         }
+         this.reactivateDisplay(n, n2, n3, n5);
++    }
++
++    public static void updateCarPlayCallState(CallState[] callStateArray, int validity) {
++        if (validity != 1) return;
++        int phase = 0;
++        if (callStateArray != null) {
++            for (int i = 0; i < callStateArray.length; ++i) {
++                CallState state = callStateArray[i];
++                if (state == null) continue;
++                System.out.println("MFW CALL_STATE status=" + state.getStatus() + " direction=" + state.getDirection());
++                if (state.getStatus() == 3 && state.getDirection() == 0) {
++                    phase = 1;
++                    break;
++                }
++                if (state.getStatus() == 1 || state.getStatus() == 2 || state.getStatus() == 3) {
++                    phase = 2;
++                }
++            }
++        }
++        carPlayCallPhase = phase;
++        System.out.println("MFW CALL_PHASE " + phase);
++    }
++
++    private boolean isCarPlayActive() {
++        boolean active = this.fwServices.getSysApp().getChoiceModelApp(1122).getValue() == 1;
++        if (!active) carPlayCallPhase = 0;
++        return active;
++    }
++
++    private boolean isCarPlayScreen() {
++        int screenId = this.fw.getHMIService().getCurrentScreenID();
++        System.out.println("MFW SCREEN " + screenId);
++        return screenId == -2136407296 || screenId == 240000;
++    }
++
++    private void handleCustomKey(int keyId) {
++        System.out.println("MFW ACTION " + keyId);
++        if (!this.isCarPlayActive()) {
++            if (keyId == 50) this.openDeviceSelection();
++            return;
++        }
++        int phase = carPlayCallPhase;
++        if (phase == 1) {
++            if (keyId == 58) this.sendCarPlayButton(13);
++            else if (keyId == 52) this.sendCarPlayButton(14);
++            else if (keyId == 50) this.requestCarPlayUI();
++            return;
++        }
++        if (phase == 2) {
++            if (keyId == 52) this.sendCarPlayButton(14);
++            else if (keyId == 50) this.requestCarPlayUI();
++            return;
++        }
++        if (keyId == 50) {
++            if (this.isCarPlayScreen()) {
++                this.requestSiri();
++            }
++            else {
++                this.requestCarPlayUI();
++            }
++            return;
++        }
++        if (!this.isCarPlayScreen()) return;
++        ConnectionPlaybackPolicy.userTransportRequested();
++        if (keyId == 57) { CarPlayAudioFocus.togglePlayback(); return; }
++        if (!CarPlayAudioFocus.hasFocus()) CarPlayAudioFocus.request();
++        if (keyId == 58) this.sendCarPlayButton(9);
++        else if (keyId == 57) this.sendCarPlayButton(15);
++        else if (keyId == 52) this.sendCarPlayButton(10);
++    }
++
++    private void openDeviceSelection() {
++        this.fw.getHMIService().fireSMEvent(0, 107);
++        this.fw.getHMIService().fireSMEvent(0, 1909);
++    }
++
++    private boolean sendCarPlayButton(int buttonId) {
++        return this.runTerminalModeCommand("postButton(CarplayId)", String.valueOf(buttonId));
++    }
++
++    private boolean requestSiri() {
++        return CarPlayAudioFocus.siri();
++    }
++
++    private boolean requestCarPlayUI() {
++        return this.runTerminalModeCommand("requestUI", "");
++    }
++
++    private boolean runTerminalModeCommand(String command, String argument) {
++        if (CarPlayAudioFocus.command(command, argument)) return true;
++        System.out.println("MFW COMMAND_FALLBACK " + command);
++        BundleContext bundleContext = this.fw.getBundleCxt();
++        ServiceReference serviceReference = bundleContext.getServiceReference(SwDiagnosisManager.class.getName());
++        if (serviceReference == null) {
++            System.out.println("MFW NO_DIAG_SERVICE");
++            return false;
++        }
++        try {
++            Object object = bundleContext.getService(serviceReference);
++            if (object instanceof SwDiagnosisManager) {
++                Object result = ((SwDiagnosisManager)object).processCommand(32, command, argument);
++                System.out.println("MFW DIAG_RESULT " + result);
++                return !(result instanceof Number) || ((Number)result).intValue() == 0;
++            }
++        }
++        catch (Throwable throwable) {
++            System.out.println("MFW DIAG_FAILED " + throwable);
++            return false;
++        }
++        finally {
++            bundleContext.ungetService(serviceReference);
++        }
++        return false;
+     }
+ 
+     private boolean isWakeUpKey(int n) {
+@@ -492,7 +690,6 @@
+         }
+     }
+ 
+-    @Override
+     public void updateDisplayTurnMechStatus(int n, int n2) {
+         if (n2 == 1) {
+             this.fw.getPowerMgr().updateDisplayTurnMechStatus(n);
+@@ -505,7 +702,6 @@
+         }
+     }
+ 
+-    @Override
+     public void updateRecognizerMode(int n, int n2, int n3) {
+         this.lc.log(-2137614336, 688, (long)n2, (long)n3);
+     }
+@@ -576,29 +772,23 @@
+         }
+     }
+ 
+-    @Override
+     public void processAudioUsageRestriction(boolean bl) {
+     }
+ 
+-    @Override
+     public void processTunerUsageRestriction(boolean bl) {
+     }
+ 
+-    @Override
+     public void processTVUsageRestriction(boolean bl) {
+     }
+ 
+-    @Override
+     public void processCDCUsageRestriction(boolean bl) {
+     }
+ 
+-    @Override
+     public void processFunctionUsageRestriction(boolean bl) {
+         this.lc.log(-2137614336, 701, bl);
+         this.restrictFunctionUsage = bl;
+     }
+ 
+-    @Override
+     public void genericSettingResponse(int n, int n2, int n3) {
+         this.lc.log(-2137614336, 702, (long)n, (long)n2, (long)n3);
+         if (n2 == 80) {
+@@ -606,20 +796,17 @@
+         }
+     }
+ 
+-    @Override
+     public void processChildProtection(boolean bl) {
+         this.lc.log(-2137614336, 703, bl);
+         this.childProtectionActivated = bl;
+     }
+ 
+-    @Override
+     public void updateProximity(int n, int n2, int n3) {
+     }
+ 
+     /*
+      * WARNING - Removed try catching itself - possible behaviour change.
+      */
+-    @Override
+     public void notifyPowerListenerOnEnterState(int n, int n2) {
+         Object object = this.powerEventLock;
+         synchronized (object) {
+@@ -627,15 +814,12 @@
+         }
+     }
+ 
+-    @Override
+     public void notifyPowerListenerOnExitState(int n, int n2) {
+     }
+ 
+-    @Override
+     public void notifyPowerTriggerAction(int n, int n2) {
+     }
+ 
+-    @Override
+     public void updateClampState(boolean bl, boolean bl2, boolean bl3, boolean bl4) {
+         this.lc.log(-2137614336, 704, bl2);
+         if (this.kl15On != bl2 || this.klSOn != bl || bl2) {
+@@ -655,7 +839,6 @@
+         }
+     }
+ 
+-    @Override
+     public void lastKey(int n, int n2, int n3) {
+     }
+ 
+@@ -710,22 +893,18 @@
+         }
+     }
+ 
+-    @Override
+     public void updateKey2(int n, int n2, int n3, int n4, int n5) {
+         this.updateKey(n, n2, n3, n5);
+     }
+ 
+-    @Override
+     public void updateEncoder2(int n, int n2, int n3, int n4, int n5) {
+         this.updateEncoder(n, n2, n3, n5);
+     }
+ 
+-    @Override
+     public void updateRecognizerLanguage2(int n, String string, int n2, int n3) {
+         this.updateRecognizerLanguage(n, string, n3);
+     }
+ 
+-    @Override
+     public void updateCharacterEvent2(int n, String[] stringArray, int[] nArray, int n2) {
+         this.lc.log(1078071040, 454, (Object)stringArray, (long)n, (long)n2);
+         this.lc.log(1078071040, 455, (Object)stringArray, (Object)nArray);
+@@ -735,47 +914,39 @@
+                 return;
+             }
+             StringBuffer stringBuffer = new StringBuffer(stringArray.length);
+-            for (int i = 0; i < stringArray.length; ++i) {
+-                stringBuffer.append(stringArray[i]);
++            for (int i2 = 0; i2 < stringArray.length; ++i2) {
++                stringBuffer.append(stringArray[i2]);
+             }
+             String string = stringBuffer.toString();
+             this.fireRecognizedTouchEvent(string, KeyMap.kbdID2termID(n), nArray);
+         }
+     }
+ 
+-    @Override
+     public void updateKeyboardType(int n, int n2) {
+     }
+ 
+-    @Override
+     public void updateTouchSensitiveArea(int n, int n2, int n3, int n4, int n5, int n6) {
+     }
+ 
+-    @Override
+     public void getVersionInfo(int n, int n2, String string) {
+     }
+ 
+-    @Override
+     public void updateGesture2(int n, int n2, int n3, boolean bl, int n4, int n5, int n6, int n7, int n8, int n9) {
+         this.updateGesture(n, n2, n4, n5, n6, n7, 0, n9);
+     }
+ 
+-    @Override
+     public void updateInputPanelReady(int n, int n2, int n3) {
+     }
+ 
+-    @Override
+     public void notifyOnSpecialPowerEvent(int n, int n2) {
+         if (n == 301) {
+             this.standbyFilerActive = true;
+         }
+     }
+ 
+-    @Override
+     public void getProperty(int n, int n2, int n3, int n4, byte[] byArray) {
+     }
+ 
+-    @Override
+     public void updateAdvancedProximity(int n, int n2, int n3, int n4, int n5, int n6, int n7, int n8, int n9, int n10) {
+     }
+ }

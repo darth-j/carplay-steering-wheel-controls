@@ -1,0 +1,165 @@
+--- a/de/audi/app/terminalmode/dsi/carplay/CarplayDSILifecycleController$DSICarplayListenerImpl.java
++++ b/de/audi/app/terminalmode/dsi/carplay/CarplayDSILifecycleController$DSICarplayListenerImpl.java
+@@ -44,7 +44,7 @@
+ 
+ public class CarplayDSILifecycleController$DSICarplayListenerImpl
+ implements DSICarplayListener {
+-    private static final String LOGCLASS;
++    private static final String LOGCLASS = "DSICarplayListenerImpl";
+     private final LogChannel logger;
+     private final DispatcherBase dispatcher;
+     private final IEventBus eventBus;
+@@ -54,23 +54,23 @@
+     private final PlayPositionLogger playPositionLogger;
+ 
+     private IResource[] convertResource(Resource[] resourceArray) {
+-        Object[] objectArray = new IResource[resourceArray.length];
+-        for (int i = 0; i < resourceArray.length; ++i) {
+-            objectArray[i] = new CarPlayResource(resourceArray[i]);
++        IResource[] objectArray = new IResource[resourceArray.length];
++        for (int i2 = 0; i2 < resourceArray.length; ++i2) {
++            objectArray[i2] = new CarPlayResource(resourceArray[i2]);
+         }
+         this.logger.log(-2137614336, 9236, (Object)"DSICarplayListenerImpl", (Object)Arrays2.toString(objectArray));
+         return objectArray;
+     }
+ 
+     private IAppState[] convertAppState(AppState[] appStateArray) {
+-        Object[] objectArray = new IAppState[appStateArray.length];
++        IAppState[] objectArray = new IAppState[appStateArray.length];
+         boolean bl = false;
+-        for (int i = 0; i < appStateArray.length; ++i) {
+-            if (appStateArray[i].getAppStateID() == 1 && appStateArray[i].getOwner() == 2) {
++        for (int i2 = 0; i2 < appStateArray.length; ++i2) {
++            if (appStateArray[i2].getAppStateID() == 1 && appStateArray[i2].getOwner() == 2) {
+                 bl = true;
+             }
+-            if (bl && appStateArray[i].getAppStateID() == 3) continue;
+-            objectArray[i] = new CarPlayAppState(appStateArray[i]);
++            if (bl && appStateArray[i2].getAppStateID() == 3) continue;
++            objectArray[i2] = new CarPlayAppState(appStateArray[i2]);
+         }
+         this.logger.log(-2137614336, 9237, (Object)"DSICarplayListenerImpl", (Object)Arrays2.toString(objectArray));
+         return objectArray;
+@@ -81,15 +81,15 @@
+         this.dispatcher = dispatcherBase;
+         this.eventBus = iEventBus;
+         this.context = iContext;
++        de.audi.tghu.fwkbd.CarPlayAudioFocus.attach(iContext);
+         this.notifiedPlayPosition = new TrackPlayPositionEvent(-1, -1);
+         this.playPositionLogger = new PlayPositionLogger(new PlayPositionLoggerConfiguration().setPlayPositionLogEvent(PlayPositionEvent.STARTUP, new PlayPositionLogEvent(logChannel, 1078071040, 3)).setPlayPositionLogEvent(PlayPositionEvent.PLAYBACK_STATE_CHANGED, new PlayPositionLogEvent(logChannel, 1078071040, 2)).setPlayPositionLogEvent(PlayPositionEvent.TRACK_CHANGED, new PlayPositionLogEvent(logChannel, 1078071040, 3)).setPlayPositionLogEvent(PlayPositionEvent.ILLEGAL_PLAYPOSITION, new PlayPositionLogEvent(logChannel, 10000, 3)).setPlayPositionLogEvent(PlayPositionEvent.TO_LATE_PLAYPOSITION, new PlayPositionLogEvent(logChannel, 10000, 3)));
+     }
+ 
+     public void init() {
+-        this.dioDSIControllerListener = (ICarplayDSIControllerListener)this.context.get(SmartphoneManager$SmartphoneType.CARPLAY, CarplayDSILifecycleController.class$de$audi$app$terminalmode$dsi$carplay$ICarplayDSIControllerListener == null ? (CarplayDSILifecycleController.class$de$audi$app$terminalmode$dsi$carplay$ICarplayDSIControllerListener = CarplayDSILifecycleController.class$("de.audi.app.terminalmode.dsi.carplay.ICarplayDSIControllerListener")) : CarplayDSILifecycleController.class$de$audi$app$terminalmode$dsi$carplay$ICarplayDSIControllerListener);
+-    }
+-
+-    @Override
++        this.dioDSIControllerListener = (ICarplayDSIControllerListener)this.context.get(SmartphoneManager$SmartphoneType.CARPLAY, ICarplayDSIControllerListener.class);
++    }
++
+     public void updateMode(Resource[] resourceArray, AppState[] appStateArray, int n) {
+         if (!this.isValid(n)) {
+             this.logger.log(-2137614336, 9238, (Object)"DSICarplayListenerImpl");
+@@ -100,20 +100,16 @@
+         this.dispatcher.execute(new CarplayDSILifecycleController$DSICarplayListenerImpl$1(this, "digitalIpodOutListener.updateMode", iAppStateArray, iResourceArray));
+     }
+ 
+-    @Override
+     public void responseModeChange(Resource[] resourceArray, AppState[] appStateArray, int n) {
+     }
+ 
+-    @Override
+     public void asyncException(int n, String string, int n2) {
+         this.logger.log(10000, 2962, (Object)"DSICarplayListenerImpl", (Object)String.valueOf(n), (Object)String.valueOf(string), (Object)String.valueOf(n2));
+     }
+ 
+-    @Override
+     public void requestBTDeactivation(String string, int n) {
+     }
+ 
+-    @Override
+     public void updateTextInputState(int n, int n2) {
+         if (!this.isValid(n2)) {
+             this.logger.log(-2137614336, 9239, (Object)"DSICarplayListenerImpl");
+@@ -122,11 +118,9 @@
+         this.dispatcher.execute(new CarplayDSILifecycleController$DSICarplayListenerImpl$2(this, "digitalIpodOutListener.updateTextInputState", n));
+     }
+ 
+-    @Override
+     public void updateDeviceInfo(DeviceInfo deviceInfo, int n) {
+     }
+ 
+-    @Override
+     public void updateTelephonyState(TelephonyState telephonyState, int n) {
+         if (this.isValid(n)) {
+             PhoneStateChangedEvent phoneStateChangedEvent = new PhoneStateChangedEvent(telephonyState.getSignalStrength(), telephonyState.getRegistrationStatus(), telephonyState.isAirplaneMode(), telephonyState.getMobileOperator());
+@@ -135,7 +129,6 @@
+         }
+     }
+ 
+-    @Override
+     public void updateNowPlayingData(TrackData trackData, int n) {
+         if (this.isValid(n)) {
+             TrackDataChangedEvent trackDataChangedEvent = new TrackDataChangedEvent$Builder().setAlbum(trackData.getAlbum()).setArtist(trackData.getArtist()).setComposer(trackData.getComposer()).setDuration(trackData.getDuration()).setGenre(trackData.getGenre()).setTitle(trackData.getTitle()).build();
+@@ -154,8 +147,8 @@
+         this.eventBus.updatePlayPosition(trackPlayPositionEvent);
+     }
+ 
+-    @Override
+     public void updatePlaybackState(PlaybackInfo playbackInfo, int n) {
++        if (playbackInfo != null) de.audi.tghu.fwkbd.CarPlayAudioFocus.recordPlaybackState(playbackInfo.getStatus(), n);
+         if (this.isValid(n)) {
+             PlaybackInfoChangedEvent playbackInfoChangedEvent = new PlaybackInfoChangedEvent$Builder().setPlaybackState(this.convert(playbackInfo.getStatus())).build();
+             this.logger.log(1078071040, 5094, (Object)"DSICarplayListenerImpl", (Object)playbackInfoChangedEvent);
+@@ -182,7 +175,6 @@
+         return PlaybackInfoChangedEvent$PlaybackState.STOPPED;
+     }
+ 
+-    @Override
+     public void updatePlayposition(int n, int n2) {
+         if (this.isValid(n2)) {
+             this.playPositionLogger.updatePlayPosition(n / 1000, this.notifiedPlayPosition.getTotalTimeOfTrack());
+@@ -190,30 +182,25 @@
+         }
+     }
+ 
+-    @Override
+     public void updateCoverArtUrl(ResourceLocator resourceLocator, int n) {
+     }
+ 
+-    @Override
+     public void updateCallState(CallState[] callStateArray, int n) {
+-    }
+-
+-    @Override
+-    public void duckAudio(int n, double d) {
+-        this.dispatcher.execute(new CarplayDSILifecycleController$DSICarplayListenerImpl$3(this, "digitalIpodOutListener.duckAudio", n, d));
+-    }
+-
+-    @Override
++        de.audi.tghu.fwkbd.KbdListener.updateCarPlayCallState(callStateArray, n);
++    }
++
++    public void duckAudio(int n, double d2) {
++        this.dispatcher.execute(new CarplayDSILifecycleController$DSICarplayListenerImpl$3(this, "digitalIpodOutListener.duckAudio", n, d2));
++    }
++
+     public void unduckAudio(int n) {
+         this.dispatcher.execute(new CarplayDSILifecycleController$DSICarplayListenerImpl$4(this, "digitalIpodOutListener.unduckAudio", n));
+     }
+ 
+-    @Override
+     public void oemAppSelected() {
+         this.dispatcher.execute(new CarplayDSILifecycleController$DSICarplayListenerImpl$5(this, "digitalIpodOutListener.oemAppSelected"));
+     }
+ 
+-    @Override
+     public void updateMainAudioType(int n, int n2) {
+         if (!this.isValid(n2)) {
+             this.logger.log(-2137614336, 9240, (Object)"DSICarplayListenerImpl");
+@@ -234,3 +221,4 @@
+         return carplayDSILifecycleController$DSICarplayListenerImpl.dioDSIControllerListener;
+     }
+ }
++

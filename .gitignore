@@ -16,3 +16,21 @@
 !build.sh
 !COMPATIBILITY.md
 !NOTICE.md
+# Target adapter: reviewed source only; never OEM inputs or generated payloads.
+!adapter/
+!adapter/**/
+!adapter/build_gem.py
+!adapter/profile.json
+!adapter/ADAPTER-NOTICE.md
+!adapter/GEM-INSTALL.md
+!adapter/src/de/audi/tghu/fwkbd/CarPlayAudioFocus.java
+!adapter/src/de/audi/tghu/fwkbd/ConnectionPlaybackPolicy.java
+!adapter/patches/KbdListener.patch
+!adapter/patches/CarplayDSILifecycleController$DSICarplayListenerImpl.patch
+!adapter/patches/DSICarplaySafeProxy.patch
+!adapter/gem/mod/command.sh
+!adapter/gem/mod/steering-controls/manage.sh
+!adapter/gem/mod/steering-controls/once.block
+!adapter/gem/mod/steering-controls/permanent.block
+!adapter/tests/test_builder.py
+!adapter/tests/test_installer.py

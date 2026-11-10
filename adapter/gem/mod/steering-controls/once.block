@@ -1,0 +1,28 @@
+# SWW_CONTROLS_BEGIN
+# SPDX-License-Identifier: GPL-3.0-only
+SWW_ARG=
+sww_boot_digest() {
+    sww_line=$(on -f rcc /net/rcc/usr/bin/sha1sum "$1") || return 1
+    set -- $sww_line
+    [ "$#" -ge 1 ] || return 1
+    echo "$1"
+}
+sww_restore_ok=0
+if read sww_expected < /mnt/app/eso/hmi/lsd/lsd.sh.sww-original.sha1; then
+    if mount -uw /mnt/app; then
+        if cp -p /mnt/app/eso/hmi/lsd/lsd.sh.sww-original /mnt/app/eso/hmi/lsd/lsd.sh.sww-boot-new; then
+            sww_saved=$(sww_boot_digest /net/mmx/mnt/app/eso/hmi/lsd/lsd.sh.sww-boot-new)
+            if [ "$sww_saved" = "$sww_expected" ] && mv -f /mnt/app/eso/hmi/lsd/lsd.sh.sww-boot-new /mnt/app/eso/hmi/lsd/lsd.sh; then
+                sync
+                sww_restored=$(sww_boot_digest /net/mmx/mnt/app/eso/hmi/lsd/lsd.sh)
+                [ "$sww_restored" != "$sww_expected" ] || sww_restore_ok=1
+            fi
+        fi
+        if ! mount -ur /mnt/app; then sww_restore_ok=0; fi
+    fi
+fi
+if [ "$sww_restore_ok" = 1 ] && [ -f /eso/hmi/lsd/jars/SteeringWheelCarPlayControls.jar ] && [ ! -f /mnt/app/eso/hmi/lsd/sww-controls.disabled ]; then
+    SWW_ARG=-Xbootclasspath/p:/eso/hmi/lsd/jars/SteeringWheelCarPlayControls.jar
+fi
+on -p 12 /ifs/jre/bin/j9 $VMOPTIONS $SWW_ARG -Xbootclasspath:$BOOTCLASSPATH -jxe:$LSD_DIR/lsd.jxe >/dev/null 2>/dev/shmem/sww-controls-errors.log &
+# SWW_CONTROLS_END

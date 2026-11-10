@@ -2,14 +2,14 @@
 
 # Adapter contract
 
-The core operates on logical buttons and primitive state values. It does not ship a vendor adapter, SDK, firmware class, installer or network client.
+The core operates on logical buttons and primitive state values. The portable core does not ship proprietary dependencies. A separate [reference adapter build kit](adapter/GEM-INSTALL.md) now supplies project helpers, source patches and GEM installer templates; its OEM inputs remain local.
 
 ## Logical input
 
 - Buttons: `STAR`, `ROLLER`, `VOICE`, `NAVIGATION_VOICE`.
 - Events: `PRESS`, `RELEASE`, `LONG_PRESS`, `DOUBLE_PRESS`.
 - `steeringWheelSource` must come from a verified input-source mapping. Do not infer it from the button number alone; another control surface may reuse that number.
-- Map hardware IDs locally. No physical key IDs, connected-screen model IDs or diagnostic addresses are included here. Generic model and software-version reference information is documented separately in [COMPATIBILITY.md](COMPATIBILITY.md).
+- Map hardware IDs locally. The portable API itself has no physical key IDs or screen-model IDs. The reference adapter patches include the non-unique technical mappings for their supported target, but no diagnostic endpoint or device identity. Generic model and software-version reference information is documented separately in [COMPATIBILITY.md](COMPATIBILITY.md).
 - Preserve native behavior when `onKey` returns false. Do not call both custom and native paths for consumed events.
 - Update connection and page state independently. Call `updateConnection(false, false)` at a real disconnect. Do not substitute “application started” for “phone connected”.
 - Feed only a normalized connected/page boolean to the library. Any interpretation of vendor state models belongs in the adapter.

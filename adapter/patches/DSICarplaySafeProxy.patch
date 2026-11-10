@@ -1,0 +1,99 @@
+--- a/de/audi/app/terminalmode/dsi/carplay/DSICarplaySafeProxy.java
++++ b/de/audi/app/terminalmode/dsi/carplay/DSICarplaySafeProxy.java
+@@ -25,11 +25,12 @@
+     private final DSICarplay nullService;
+     private volatile DSICarplay dsi;
+     private final DSICarplayListener dsiListener;
++    private final de.audi.tghu.fwkbd.ConnectionPlaybackPolicy.ButtonGate mfwPlaybackGate = new de.audi.tghu.fwkbd.ConnectionPlaybackPolicy.ButtonGate();
+ 
+     public DSICarplaySafeProxy(LogChannel logChannel, DSICarplayListener dSICarplayListener) {
+         this.dsiListener = dSICarplayListener;
+         this.dsi = this.nullService = new NullDSICarplay(logChannel);
+-        this.setNotification(new int[]{3, 4, 5, 7, 9, 10, 12}, (DSIListener)this.dsiListener);
++        this.setNotification(new int[]{3, 4, 5, 7, 8, 9, 10, 12}, (DSIListener)this.dsiListener);
+     }
+ 
+     protected synchronized void addDSIService(DSICarplay dSICarplay) {
+@@ -38,76 +39,67 @@
+     }
+ 
+     protected synchronized void removeDSIService() {
++        de.audi.tghu.fwkbd.ConnectionPlaybackPolicy.endSession();
+         this.dsi = this.nullService;
+     }
+ 
+-    @Override
+     protected DSIBase getDSI() {
+         return this.dsi;
+     }
+ 
+-    @Override
+     protected DSIListener getDSIListener() {
+         return this.dsiListener;
+     }
+ 
+-    @Override
+     public void startService(ServiceConfiguration serviceConfiguration) {
++        mfwPlaybackGate.reset();
++        de.audi.tghu.fwkbd.ConnectionPlaybackPolicy.beginSession();
+         this.dsi.startService(serviceConfiguration);
+     }
+ 
+-    @Override
+-    public void postButtonEvent(int n, int n2) {
++    public synchronized void postButtonEvent(int n, int n2) {
++        if (!mfwPlaybackGate.forward(n, n2)) return;
+         this.dsi.postButtonEvent(n, n2);
+     }
+ 
+-    @Override
+     public void postTouchEvent(int n, int n2, TouchEvent[] touchEventArray) {
+         this.dsi.postTouchEvent(n, n2, touchEventArray);
+     }
+ 
+-    @Override
+     public void postRotaryEvent(int n) {
+         this.dsi.postRotaryEvent(n);
+     }
+ 
+-    @Override
+     public void postCharacterEvent(int n, String[] stringArray) {
+         this.dsi.postCharacterEvent(n, stringArray);
+     }
+ 
+-    @Override
+     public void requestModeChange(ResourceRequest[] resourceRequestArray, AppStateRequest[] appStateRequestArray, String string) {
+         this.dsi.requestModeChange(resourceRequestArray, appStateRequestArray, string);
+     }
+ 
+-    @Override
+     public void responseUpdateMode(Resource[] resourceArray, AppState[] appStateArray) {
+         this.dsi.responseUpdateMode(resourceArray, appStateArray);
+     }
+ 
+-    @Override
+     public void responseBTDeactivation() {
+         this.dsi.responseBTDeactivation();
+     }
+ 
+-    @Override
+     public void requestUI(int n) {
+         this.dsi.requestUI(n);
+     }
+ 
+-    @Override
+     public void requestNightMode(boolean bl) {
+         this.dsi.requestNightMode(bl);
+     }
+ 
+-    @Override
+     public void requestSIRIAction(SiriAction siriAction) {
+         this.dsi.requestSIRIAction(siriAction.getDSIConstantValue());
+     }
+ 
+-    @Override
+     public void responseUpdateMainAudioType(int n) {
+         this.dsi.responseUpdateMainAudioType(n);
+     }
+ }
++

@@ -1,0 +1,8 @@
+# SWW_CONTROLS_BEGIN
+# SPDX-License-Identifier: GPL-3.0-only
+SWW_ARG=
+if [ -f /eso/hmi/lsd/jars/SteeringWheelCarPlayControls.jar ] && [ ! -f /mnt/app/eso/hmi/lsd/sww-controls.disabled ]; then
+    SWW_ARG=-Xbootclasspath/p:/eso/hmi/lsd/jars/SteeringWheelCarPlayControls.jar
+fi
+on -p 12 /ifs/jre/bin/j9 $VMOPTIONS $SWW_ARG -Xbootclasspath:$BOOTCLASSPATH -jxe:$LSD_DIR/lsd.jxe >/dev/null 2>/dev/shmem/sww-controls-errors.log &
+# SWW_CONTROLS_END

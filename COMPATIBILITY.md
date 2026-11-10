@@ -18,7 +18,7 @@ The mapping behavior was developed and evaluated in a separate, non-distributed 
 | Embedded runtime | QNX 6.5 ARM; IBM J9 2.3 Foundation |
 | Prerequisite | CarPlay is already activated and works through the existing connection |
 
-The public repository contains an independently organized logic library and synthetic tests. The manufacturer adapter, proprietary dependencies and target-compatible installation payload are **not distributed**. Even on the exact reference baseline, the default Java 8 build output cannot simply be copied into the embedded JVM.
+The public repository contains an independently organized logic library and synthetic tests. Project helpers, exact source patches and GEM installer templates are now provided in [adapter/](adapter/GEM-INSTALL.md); proprietary dependencies, full stock classes and precompiled OEM-derived payloads are **not distributed**. The operator builds the compatible payload locally; the new public installer is not live-tested. Even on the exact reference baseline, the default Java 8 build output cannot simply be copied into the embedded JVM.
 
 ### Validation scope
 
@@ -32,7 +32,7 @@ The extracted public library is validated by synthetic tests. It is not the exac
 
 | Configuration | Status |
 |---|---|
-| Exact reference baseline above | Mapping reference only; still requires an adapter and target validation |
+| Exact reference baseline above | Reference build kit available; local OEM inputs and target validation required |
 | Other A6 C7/C7.5 configurations or model years | Not verified; the same dashboard or button layout does not establish compatibility |
 | Other AU57x software trains, regions or MU versions | Not verified; do not reuse integration details solely because the firmware-family name matches |
 | Other models using MHI2 | Not verified; physical events, source IDs, service interfaces and state models must be checked |
@@ -57,7 +57,7 @@ Only generic model, platform and software-version information is listed here. No
 
 ### 参考适配平台
 
-以下是独立、未随仓库分发的适配器所依据的平台。**它是已有集成记录的参考基线，不代表本仓库的逻辑库可直接在该平台安装。**
+以下是参考适配器所依据的平台。构建工具、辅助源码和补丁现已公开，原厂依赖和预编译衍生产物仍不分发。**它是已有集成记录的参考基线，不代表本仓库的逻辑库可直接在该平台安装。**
 
 | 项目 | 参考范围 |
 |---|---|
@@ -69,7 +69,7 @@ Only generic model, platform and software-version information is listed here. No
 | 运行环境 | QNX 6.5 ARM；IBM J9 2.3 Foundation |
 | 前提 | 原有 CarPlay 已激活，且原连接方式正常工作 |
 
-公开仓库仅包含重新整理的独立逻辑库及合成测试，**不包含原厂适配器、专有依赖或目标设备安装包**。即使车型和固件与上表完全一致，也不能把默认 Java 8 构建产物直接复制进旧车机 JVM。
+公开仓库包含独立逻辑库及合成测试，并已在 [adapter/](adapter/GEM-INSTALL.md) 补充自有辅助类、原厂类修改补丁和 GEM 安装模板。构建依赖由操作者本地提供，**不包含原厂依赖、完整原厂类或预编译的原厂衍生产物**。即使车型和固件与上表完全一致，也不能把默认 Java 8 构建产物直接复制进旧车机 JVM。
 
 ### 已有测试范围
 
@@ -83,7 +83,7 @@ Only generic model, platform and software-version information is listed here. No
 
 | 范围 | 状态 |
 |---|---|
-| 上述完整参考配置 | 作为映射参考，仍需适配器和目标验证 |
+| 上述完整参考配置 | 已有参考构建工具；需本地原厂依赖和目标验证 |
 | 其他 A6 C7/C7.5 配置或年款 | 未验证；外观或按键布局相同不代表兼容 |
 | 其他 AU57x 固件、区域或 MU 版本 | 未验证；不能只凭系列名称复用适配细节 |
 | 使用 MHI2 的其他车型 | 未验证；需重新核对事件来源、服务接口和状态模型 |
